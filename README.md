@@ -11,3 +11,8 @@ https://github.com/ROBOTIS-GIT/turtlebot3_msgs<br>
 # Hector drone gazebo 작동법
 
     rosservice call /enable_motors "enable : true"
+    
+# Test
+
+    rostopic pub -r 10 /drone1/cmd_vel geometry_msgs/Twist '{linear: {x: 0, y: 0.0, z: 1.0}, angular: {x: 0.0, y: 0.0, z: 0.0}}'
+
