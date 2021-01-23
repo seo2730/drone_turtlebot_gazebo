@@ -16,7 +16,7 @@ l = 0.24; m = 1.05;
 % Premise variables : Roll Pitch Yaw angular velocity(degree/s^2)
 Phi_dot_min = 0; Phi_dot_max = 30;
 Theta_dot_min = 0; Theta_dot_max = 30;
-Psi_dot_min = 0; Psi_dot_max = 30;
+Psi_dot_min = 0; Psi_dot_max = 360;
 
 den1 = Phi_dot_max - Phi_dot_min;
 den2 = Theta_dot_max - Theta_dot_min;
@@ -324,29 +324,73 @@ F8 = Ys8 * inv(Xs);
 P = inv(Xs);
 
 %% Fuzzy controller in MATLAB code
-Initial_value = [0 0 0 0 0 0]';
+Initial_value = [20 10 0 0 0 0]';
 dt = 0.01;
 input = [0 0 0 0 0 0 0 0]';
 
 t = 0:dt:10;
 Xsaved = zeros(6,1001);
+
 for i=1:size(t,2)
     if i==1
         % Controller
         x = Initial_value;
         Xsaved(:,i) = x;
-        e = x - input;
-        h1 = (Phi_dot_max-Xsaved(4,i))*(Theta_dot_max-Xsaved(5,i))*(Psi_dot_max-Xsaved(6,i))/(den1*den2*den3);
-        h2 = (Phi_dot_max-Xsaved(4,i))*(Theta_dot_max-Xsaved(5,i))*(Psi_dot_min+Xsaved(6,i))/(den1*den2*den3); % 수정할 것
-        h3 = (Phi_dot_max-Xsaved(4,i))*(Theta_dot_max-Xsaved(5,i))*(Psi_dot_max-Xsaved(6,i))/(den1*den2*den3); % 수정할 것
-        h4 = ()*()*()/(den1*den2*den3);
-        h5 = ()*()*()/(den1*den2*den3);
-        h6 = ()*()*()/(den1*den2*den3);
-        h7 = ()*()*()/(den1*den2*den3);
-        h8 = ()*()*()/(den1*den2*den3);
+        B = [                   0                    0                   0                    0        0        0       0        0;
+                                0                    0                   0                    0        0        0       0        0;
+                                0                    0                   0                    0        0        0       0        0;
+                       Jr/Ix*x(5)          -Jr/Ix*x(5)          Jr/Ix*x(5)          -Jr/Ix*x(5) -l*Kt/Ix        0 l*Kt/Ix        0;
+                      -Jr/Iy*x(4)           Jr/Iy*x(4)         -Jr/Iy*x(4)           Jr/Iy*x(4)        0 -l*Kt/Iy       0  l*Kt/Iy;
+                                0                    0                   0                    0  l*Kd/Iz -l*Kd/Iz l*Kd/Iz -l*Kd/Iz];
+        e = x - B*input;
+        h1 = (Phi_dot_max-e(4))*(Theta_dot_max-e(5))*(Psi_dot_max-e(6))/(den1*den2*den3)*F1*e;
+        h2 = (Phi_dot_max-e(4))*(Theta_dot_max-e(5))*(Psi_dot_min+e(6))/(den1*den2*den3)*F2*e; 
+        h3 = (Phi_dot_max-e(4))*(Theta_dot_max+e(5))*(Psi_dot_max-e(6))/(den1*den2*den3)*F3*e; 
+        h4 = (Phi_dot_max+e(4))*(Theta_dot_max-e(5))*(Psi_dot_max-e(6))/(den1*den2*den3)*F4*e;
+        h5 = (Phi_dot_max+e(4))*(Theta_dot_max+e(5))*(Psi_dot_max-e(6))/(den1*den2*den3)*F5*e;
+        h6 = (Phi_dot_max+e(4))*(Theta_dot_max-e(5))*(Psi_dot_max+e(6))/(den1*den2*den3)*F6*e;
+        h7 = (Phi_dot_max-e(4))*(Theta_dot_max+e(5))*(Psi_dot_max+e(6))/(den1*den2*den3)*F7*e;
+        h8 = (Phi_dot_max+e(4))*(Theta_dot_max+e(5))*(Psi_dot_max+e(6))/(den1*den2*den3)*F8*e;
+        
+        % Model
+        u = h1+h2+h3+h4+h5+h6+h7+h8;
+        x(4) = x(4) + (-Kfax)/Ix*x(4)+(Iy-Iz)/Ix*x(5)*dt;
+        x(5) = x(5) + (-Kfay)/Iy*x(5)+(Iz-Ix)/Iy*x(4)*dt;
+        x(6) = x(6) + (Ix-Iy)/Iz*x(4)+(-Kfaz)/Iz*x(6)*dt;
+        
+        x(1) = x(1) + x(4)*dt;
+        x(2) = x(2) + x(5)*dt;
+        x(3) = x(3) + x(6)*dt;
         
     else
+        % Controller
+        Xsaved(:,i) = x;
+        B = [                   0                    0                   0                    0        0        0       0        0;
+                                0                    0                   0                    0        0        0       0        0;
+                                0                    0                   0                    0        0        0       0        0;
+                       Jr/Ix*x(5)          -Jr/Ix*x(5)          Jr/Ix*x(5)          -Jr/Ix*x(5) -l*Kt/Ix        0 l*Kt/Ix        0;
+                      -Jr/Iy*x(4)           Jr/Iy*x(4)         -Jr/Iy*x(4)           Jr/Iy*x(4)        0 -l*Kt/Iy       0  l*Kt/Iy;
+                                0                    0                   0                    0  l*Kd/Iz -l*Kd/Iz l*Kd/Iz -l*Kd/Iz];
 
+        e = x - B*input;
+        h1 = (Phi_dot_max-e(4))*(Theta_dot_max-e(5))*(Psi_dot_max-e(6))/(den1*den2*den3)*F1*e;
+        h2 = (Phi_dot_max-e(4))*(Theta_dot_max-e(5))*(Psi_dot_min+e(6))/(den1*den2*den3)*F2*e; 
+        h3 = (Phi_dot_max-e(4))*(Theta_dot_max+e(5))*(Psi_dot_max-e(6))/(den1*den2*den3)*F3*e; 
+        h4 = (Phi_dot_max+e(4))*(Theta_dot_max-e(5))*(Psi_dot_max-e(6))/(den1*den2*den3)*F4*e;
+        h5 = (Phi_dot_max+e(4))*(Theta_dot_max+e(5))*(Psi_dot_max-e(6))/(den1*den2*den3)*F5*e;
+        h6 = (Phi_dot_max+e(4))*(Theta_dot_max-e(5))*(Psi_dot_max+e(6))/(den1*den2*den3)*F6*e;
+        h7 = (Phi_dot_max-e(4))*(Theta_dot_max+e(5))*(Psi_dot_max+e(6))/(den1*den2*den3)*F7*e;
+        h8 = (Phi_dot_max+e(4))*(Theta_dot_max+e(5))*(Psi_dot_max+e(6))/(den1*den2*den3)*F8*e;
+        
+        % Model
+        u = h1+h2+h3+h4+h5+h6+h7+h8;
+        x(4) = x(4) + (-Kfax)/Ix*x(4)+(Iy-Iz)/Ix*x(5)*dt;
+        x(5) = x(5) + (-Kfay)/Iy*x(5)+(Iz-Ix)/Iy*x(4)*dt;
+        x(6) = x(6) + (Ix-Iy)/Iz*x(4)+(-Kfaz)/Iz*x(6)*dt;
+        
+        x(1) = x(1) + x(4)*dt;
+        x(2) = x(2) + x(5)*dt;
+        x(3) = x(3) + x(6)*dt;
     end
     
 end
