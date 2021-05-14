@@ -10,7 +10,7 @@ https://github.com/ROBOTIS-GIT/turtlebot3_msgs<br>
 
 # Hector drone gazebo 작동법
 
-    rosservice call /enable_motors "enable : true"
+    rosservice call /drone1/enable_motors "enable : true"
     
 # Test
 
