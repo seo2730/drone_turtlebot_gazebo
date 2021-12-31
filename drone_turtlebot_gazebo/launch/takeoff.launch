@@ -1,0 +1,3 @@
+<launch>
+ <node pkg="drone_turtlebot_gazebo" type="takeoff.py" name="takeoff"/> 
+</launch>

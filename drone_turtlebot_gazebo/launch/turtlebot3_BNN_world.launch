@@ -1,0 +1,52 @@
+<launch>
+  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
+  <arg name="first_tb3"  default="tb3a"/>
+  <arg name="second_tb3" default="tb3b"/>
+  <arg name="third_tb3"  default="tb3c"/>
+  <arg name="fourth_tb3"  default="tb3d"/>
+ 
+  <arg name="tb3a_x_pos" default="1.0"/>
+  <arg name="tb3a_y_pos" default="0.0"/>
+  <arg name="tb3a_z_pos" default="0.0"/>
+
+  <arg name="tb3b_x_pos" default="1.0"/>
+  <arg name="tb3b_y_pos" default="1.0"/>
+  <arg name="tb3b_z_pos" default="0.0"/>
+
+  <arg name="tb3c_x_pos" default="0.0"/>
+  <arg name="tb3c_y_pos" default="1.0"/>
+  <arg name="tb3c_z_pos" default="0.0"/>
+
+  <arg name="tb3d_x_pos" default="0.0"/>
+  <arg name="tb3d_y_pos" default="0.0"/>
+  <arg name="tb3d_z_pos" default="0.0"/>
+
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/empty.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <group ns='tb3a'>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model $(arg first_tb3) -x $(arg tb3a_x_pos) -y $(arg tb3a_y_pos) -z $(arg tb3a_z_pos) -param robot_description" />
+  </group>
+
+  <group ns='tb3b'>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model $(arg second_tb3) -x $(arg tb3b_x_pos) -y $(arg tb3b_y_pos) -z $(arg tb3b_z_pos) -param robot_description" />
+  </group>
+
+  <group ns='tb3c'>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model $(arg third_tb3) -x $(arg tb3c_x_pos) -y $(arg tb3c_y_pos) -z $(arg tb3c_z_pos) -param robot_description" />
+  </group>
+
+  <group ns='tb3d'>
+  <param name="robot_description" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
+  <node pkg="gazebo_ros" type="spawn_model" name="spawn_urdf" args="-urdf -model $(arg fourth_tb3) -x $(arg tb3d_x_pos) -y $(arg tb3d_y_pos) -z $(arg tb3d_z_pos) -param robot_description" />
+  </group>
+</launch>

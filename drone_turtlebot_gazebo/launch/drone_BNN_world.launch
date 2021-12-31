@@ -1,0 +1,46 @@
+<launch>
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/empty.world"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <group ns="drone1">
+    <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch">
+      <arg name="name" value="drone1"/>
+      <arg name="tf_prefix" value="drone1"/>
+      <arg name="y" value="2"/>
+      <arg name="z" value="0"/>
+    </include>
+  </group>
+
+  <group ns="drone2">
+    <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch">
+      <arg name="name" value="drone2"/>
+      <arg name="tf_prefix" value="drone2"/>
+      <arg name="x" value="2"/>
+      <arg name="z" value="0"/>
+    </include>
+  </group>
+
+  <group ns="drone3">
+    <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch">
+      <arg name="name" value="drone3"/>
+      <arg name="tf_prefix" value="drone3"/>
+      <arg name="y" value="-2"/>
+      <arg name="z" value="0"/>
+    </include>
+  </group>
+
+  <group ns="drone4">
+    <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch">
+      <arg name="name" value="drone4"/>
+      <arg name="tf_prefix" value="drone4"/>
+      <arg name="x" value="-2"/>
+      <arg name="z" value="0"/>
+    </include>
+  </group>
+</launch>

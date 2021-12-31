@@ -14,7 +14,7 @@
     <include file="$(find hector_quadrotor_gazebo)/launch/spawn_quadrotor.launch">
       <arg name="name" value="drone1"/>
       <arg name="tf_prefix" value="drone1"/>
-      <arg name="y" value="2"/>
+      <arg name="y" value="0"/>
     </include>
   </group>
 
