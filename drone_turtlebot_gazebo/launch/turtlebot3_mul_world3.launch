@@ -10,8 +10,8 @@
   <arg name="tb3a_y_pos" default="1.0"/>
   <arg name="tb3a_z_pos" default="0.0"/>
 
-  <arg name="tb3b_x_pos" default="1.0"/>
-  <arg name="tb3b_y_pos" default="9.0"/>
+  <arg name="tb3b_x_pos" default="2.0"/>
+  <arg name="tb3b_y_pos" default="7.0"/>
   <arg name="tb3b_z_pos" default="0.0"/>
 
   <arg name="tb3c_x_pos" default="9.0"/>
@@ -19,11 +19,11 @@
   <arg name="tb3c_z_pos" default="0.0"/>
 
   <arg name="tb3d_x_pos" default="9.0"/>
-  <arg name="tb3d_y_pos" default="1.0"/>
+  <arg name="tb3d_y_pos" default="3.0"/>
   <arg name="tb3d_z_pos" default="0.0"/>
 
-  <arg name="tb3e_x_pos" default="5.0"/>
-  <arg name="tb3e_y_pos" default="9.0"/>
+  <arg name="tb3e_x_pos" default="4.5"/>
+  <arg name="tb3e_y_pos" default="1.5"/>
   <arg name="tb3e_z_pos" default="0.0"/>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
